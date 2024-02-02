@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css files/enroll.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+  </style>
+  <title>Enrollment Form</title>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+        <div class="logo">
+          <img src="./css files/images/IMG-20231223-WA0005.jpg" alt="">
+        </div>
+
+        <div class="jema">JEMA <br> security LTD.</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li><hr>
+        <li><a href="services.html">Services</a></li><hr>
+        <li><a href="contact-us.html">Contact us</a></li><hr>
+        <li><a href="about-us">Terms</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="terms">
+      <h2>Note:</h2>
+      Before filling the form, applicants are expected to have <br> read, agreed and ready to adapt to company policies and rules. <br>
+    </div><br>
+    <div class="terms1">
+      Please, applicants should make sure that the email used as their  personal email is not used as next of kin's email as your application will be rejected
+    </div><br>
+
+    <div class="form">
+      <form id="recruitmentForm" action="/submit-recruitment-forms" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); submitForm()">
+        <h3>Personal Data</h3><br>
+        <input type="text" name="firstname" id="firstname" placeholder="First Name" required><br><br>
+
+        <input type="text" name="middlename" id="middlename" placeholder="Middle Name" required><br><br>
+
+        <input type="text" name="othernames" id="othernames" placeholder="Other Names"><br><br>
+
+        <input type="text" name="country" id="country" placeholder="Country of Origin" required><br><br>
+
+        <input type="text" name="state" id="state" placeholder="State of Origin" required><br><br>
+
+        <input type="text" name="localgovernment" id="localgovernment" placeholder="Local Government of Origin" required><br><br>
+
+        <h3>Essentials</h3><br>
+
+        <input type="text" name="stateofresidence" id="stateofresidence" placeholder="State of Residence" required><br><br>
+
+        <input type="text" name="city" id="city" placeholder="City" required><br><br>
+
+        <input type="date" name="dateofbirth" id="dateofbirth" required><br><br>
+
+        <input type="text" name="gender" id="gender" placeholder="Gender" required><br><br>
+
+        <input type="text" name="maritalstatus" id="maritalstatus" placeholder="Marital Status" required><br><br>
+
+        <input type="text" name="occupation" id="occupation" placeholder="Current Occupation" required><br><br>
+
+        <input type="text" name="currentworkplace" id="currentworkplace" placeholder="Current Work Place" required><br><br>
+
+        <input type="number" name="phonenumber" id="phonenumber" placeholder="Phone Number" required><br><br>
+
+        <input type="email" name="email" id="email" placeholder="Email  Address" required><br><br>
+
+        <input type="text" name="nextofkin" id="nextofkin" placeholder="Next of Kin" required><br><br>
+
+        <input type="text" name="relationship" id="relationship" placeholder="Relationship with Kin" required><br><br>
+
+        <input type="number" name="kinsphonenumber" id="kinsphonenumber" placeholder="Kin's Phone Number" required><br><br>
+
+        <input type="email" name="kinsemail" id="kinsemail" placeholder="Kin's Email  Address" required><br><br>
+
+        <button type="submit">Submit</button><br><br> <button type="reset">Reset</button>
+      </form>
+
+      <script>
+        function submitForm() {
+            const form = document.getElementById('recruitmentForm');
+            const formData = new FormData(form);
+
+            // Convert FormData to JSON
+            const jsonFormData = {};
+            formData.forEach((value, key) => {
+              jsonFormData[key] = value;
+            });
+
+            // Log JSON-formatted data for debugging
+            console.log('JSON Form Data:', jsonFormData);
+
+            fetch('/submit-recruitment-forms', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(jsonFormData),
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.text();
+            })
+            .then(data => {
+              console.log(data);
+              alert('Form submitted successfully');
+
+              window.location.href = '/dashboard.html';
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+              alert('Form submission error');
+            });
+          }
+      </script>
+      
+
+      <!-- <script>
+        function submitForm() {
+          const form = document.getElementById('recruitmentForm');
+          const formData = new FormData(form);
+    
+          fetch('/submit-recruitment-form', {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(data => {
+            console.log(data);
+            // Handle success, e.g., show a success message to the user
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Handle error, e.g., show an error message to the user
+          });
+        }
+      </script> -->
+    </div>
+  </div>
+
+  <div class="container3">
+    <div class="enroll">
+      <h2>Recruitment</h2><br><br>
+      <div class="text">
+        Interested and qualified applicants are to fill the above online form and submit within the specified time for submittion. <br><br>
+        Applicants are to only apply once as multiple applications will result to nullification and disqualification of ones self. <br><br><br>Go to the <a href="terms.html">Terms and Conditions</a> page to view more company policy.
+      </div>
+    </div>
+</div>
+</body>
+</html>
