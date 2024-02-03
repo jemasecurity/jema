@@ -82,7 +82,7 @@
 
         <input type="email" name="kinsemail" id="kinsemail" placeholder="Kin's Email  Address" required><br><br>
 
-        <button type="submit">Submit</button><br><br> <button type="reset">Reset</button>
+        <button id="submitBtn" onclick="disableButton()" type="submit">Submit</button><br><br> <button type="reset">Reset</button>
       </form>
 
       <script>
@@ -122,6 +122,18 @@
               console.error('There was a problem with the fetch operation:', error);
               alert('Form submission error');
             });
+          }
+
+                function disableButton() {
+            // Disable the button
+            document.getElementById("submitBtn").disabled = true;
+        
+            // You can also add additional logic or make an AJAX request here
+        
+            // For demonstration purposes, enable the button after a delay (e.g., 3 seconds)
+            setTimeout(function() {
+              document.getElementById("submitBtn").disabled = false;
+            }, 7000);
           }
       </script>
       
