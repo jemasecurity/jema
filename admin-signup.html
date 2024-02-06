@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./css files/login.css">
+  <link rel="stylesheet" href="./css files/sign-up.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
   </style>
-  <title>Login</title>
+  <title>Admin Create Account</title>
 </head>
 <body>
   <header>
@@ -34,22 +34,29 @@
     Users should enter  correct and working Email addresses <br> in order to be able to track previous cases and enagements <br>
   </div>
   <div class="form">
-    <h2>Login</h2><br>
-    <form id="loginForm" action="/login" method="post" onsubmit="return validateForm()">
+    <h2>Create Account</h2><br>
+
+    <form id="signupForm" action="/signup" method="post">
+      <label for="username">Username</label><br>
+      <input type="text" name="username" id="username" required><br>
+
       <label for="email">Email</label><br>
       <input type="email" name="email" id="email" required><br>
 
       <label for="password">Password</label><br>
       <input type="password" name="password" id="password" required><br><br>
 
-      <button type="submit">Login</button><br><br>
+      <button type="submit">Create Account</button><br><br>
     </form>
-    Dont have an account yet? <a href="sign-up.html"><button>Sign up</button></a>
+    already have an account? <a href="login.html"><button>Login</button></a>
   </div>
 
   <script>
-    async function submitForm() {
+        document.getElementById('signupForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
       const email = document.getElementById('email').value;
+      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
       // Simple email validation
@@ -59,33 +66,54 @@
         return;
       }
 
-      // Check if password is empty
-      if (!password.trim()) {
-        alert('Please enter your password.');
+      // Check if username is empty
+      if (!username.trim()) {
+        alert('Please enter a username.');
         return;
       }
 
-      // Send login request to the server
-      const response = await fetch('/login', {
+      // Check if password meets minimum length requirement
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+      }
+
+      // Check if the email is already in use
+      const response = await fetch('/check-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
 
       const result = await response.json();
 
-      if (response.ok) {
-        // Successful login, redirect to dashboard or home page
-        window.location.href = '/dashboard';
-      } else {
-        // Display error message to the user
-        const messageContainer = document.getElementById('messageContainer');
-        messageContainer.innerHTML = `<p>${result.error || 'Invalid email or password'}</p>`;
+      if (result.emailInUse) {
+        // Display a message to the user
+        alert('Email address is already in use.');
+        return;
       }
-    }
+
+      // If email is not in use, proceed with form submission
+      // Assuming your signup form action is '/signup'
+      const signupResponse = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, username, password }),
+      });
+
+      if (signupResponse.ok) {
+        // Redirect to login page upon successful signup
+        window.location.href = '/admin-login.html';
+      } else {
+        alert('Signup failed. Please try again.');
+      }
+    });
   </script>
+
 
   <div class="container3">
     <div class="enroll">

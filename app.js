@@ -37,19 +37,6 @@ const pool = mysql.createPool({
   insecureAuth: true,
 });
 
-// const pool = mysql.createPool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: 'u530321172_jemasecuritydb',
-//   insecureAuth: true,
-// });
-
-// app.get('/', (req, res) => {
-//   const isLoggedIn = req.session.isLoggedIn || false;
-//   res.render('index', { isLoggedIn }); // Render the HTML file and pass data
-// });
-
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -149,6 +136,139 @@ pool.getConnection((err, connection) => {
       });
     });
   });
+
+
+  // app.post('/admin-login', (req, res) => {
+  //   const { email, password } = req.body;
+  
+  //   // Query the admin table to find the matching email and password
+  //   const query = 'SELECT * FROM admin WHERE email = ? AND password = ?';
+  
+  //   pool.query(query, [email, password], (error, results) => {
+  //     if (error) {
+  //       console.error('Error fetching admin:', error);
+  //       return res.status(500).send('Internal Server Error');
+  //     }
+  
+  //     if (results.length === 0) {
+  //       // No matching admin found
+  //       return res.status(401).send('Invalid email or password');
+  //     }
+
+
+  //       // Now that the admin is authenticated, fetch the recruitment forms data
+  //     const getFormsQuery = 'SELECT * FROM recruitment_forms';
+
+  //     pool.query(getFormsQuery, (formsError, formsResults) => {
+  //       if (formsError) {
+  //         console.error('Error fetching recruitment forms:', formsError);
+  //         return res.status(500).send('Internal Server Error');
+  //       }
+
+  //       // Render the admin.ejs template with the recruitment forms data
+  //       res.render('admin', { adminData: results[0], users: usersResults, forms: formsResults });
+  //     });
+  //   });
+  // });
+
+
+
+  app.post('/admin-login', (req, res) => {
+    const { email, password } = req.body;
+  
+    // Query the admin table to find the matching email and password
+    const query = 'SELECT * FROM admin WHERE email = ? AND password = ?';
+  
+    pool.query(query, [email, password], (error, results) => {
+      if (error) {
+        console.error('Error fetching admin:', error);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      if (results.length === 0) {
+        // No matching admin found
+        return res.status(401).send('Invalid email or password');
+      }
+  
+      // Instead of rendering admin.ejs, send the HTML file
+      res.sendFile(path.join(__dirname, 'admin.html'));
+    });
+  });
+  
+  
+    // Define server-side endpoint to fetch user data
+app.get('/fetch-user-data', (req, res) => {
+  // Assuming you have a function to query the database for user data
+  pool.query('SELECT * FROM users', (error, results) => {
+    if (error) {
+      console.error('Error fetching user data:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    // Return the user data as JSON
+    res.json(results);
+  });
+});
+
+// Define server-side endpoint to fetch form data
+app.get('/fetch-form-data', (req, res) => {
+  // Assuming you have a function to query the database for form data
+  pool.query('SELECT * FROM recruitment_forms', (error, results) => {
+    if (error) {
+      console.error('Error fetching form data:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    // Return the form data as JSON
+    res.json(results);
+  });
+});
+
+
+
+
+  // app.post('/admin-login', (req, res) => {
+  //   const { email, password } = req.body;
+  
+  //   // Query the admin table to find the matching email and password
+  //   const query = 'SELECT * FROM admin WHERE email = ? AND password = ?';
+  
+  //   pool.query(query, [email, password], (error, results) => {
+  //     if (error) {
+  //       console.error('Error fetching admin:', error);
+  //       return res.status(500).send('Internal Server Error');
+  //     }
+  
+  //     if (results.length === 0) {
+  //       // No matching admin found
+  //       return res.status(401).send('Invalid email or password');
+  //     }
+  
+  //     // Now that the admin is authenticated, fetch the users' data
+  //     const getUsersQuery = 'SELECT * FROM users';
+  
+  //     pool.query(getUsersQuery, (usersError, usersResults) => {
+  //       if (usersError) {
+  //         console.error('Error fetching users:', usersError);
+  //         return res.status(500).send('Internal Server Error');
+  //       }
+  
+  //       // Fetch the recruitment forms data
+  //       const getFormsQuery = 'SELECT * FROM recruitment_forms';
+  
+  //       pool.query(getFormsQuery, (formsError, formsResults) => {
+  //         if (formsError) {
+  //           console.error('Error fetching recruitment forms:', formsError);
+  //           return res.status(500).send('Internal Server Error');
+  //         }
+  
+  //         // Render the admin.ejs template with the admin data, users data, and forms data
+  //         res.render('admin', { adminData: results[0], users: usersResults, forms: formsResults });
+  //       });
+  //     });
+  //   });
+  // });
+  
+
+
 
   app.get('/logout', (req, res) => {
     req.session.isLoggedIn = false;

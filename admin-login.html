@@ -9,7 +9,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
   </style>
-  <title>Login</title>
+  <title>Admin Login</title>
 </head>
 <body>
   <header>
@@ -35,7 +35,7 @@
   </div>
   <div class="form">
     <h2>Login</h2><br>
-    <form id="loginForm" action="/login" method="post" onsubmit="return validateForm()">
+    <form id="loginForm">
       <label for="email">Email</label><br>
       <input type="email" name="email" id="email" required><br>
 
@@ -48,51 +48,40 @@
   </div>
 
   <script>
-    async function submitForm() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+  document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-      // Simple email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
-      }
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-      // Check if password is empty
-      if (!password.trim()) {
-        alert('Please enter your password.');
-        return;
-      }
+    // Send a POST request to the server with login credentials
+    const response = await fetch('/admin-login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      // Send login request to the server
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        // Successful login, redirect to dashboard or home page
-        window.location.href = '/dashboard';
-      } else {
-        // Display error message to the user
-        const messageContainer = document.getElementById('messageContainer');
-        messageContainer.innerHTML = `<p>${result.error || 'Invalid email or password'}</p>`;
-      }
+    if (response.ok) {
+      // Redirect to admin dashboard upon successful login
+      window.location.href = 'admin.html';
+    } else {
+      // Display error message if login fails
+      const errorMessage = await response.text();
+      alert(errorMessage);
     }
-  </script>
+  });
+</script>
+
+
 
   <div class="container3">
     <div class="enroll">
       <h2>Recruitment</h2><br><br>
       <div class="text">
         Interested and qualified applicants are to fill the above online form and submit within the specified time for submittion.
-        <br><br><a href="Enrollment Form.html"><button>Fill Form</button></a><br><br>
+        <br><br><a href="sign-up.html"><button>Fill Form</button></a><br><br>
         Applicants are to only apply once as multiple applications will result to nullification and disqualification of ones self. <br><br><br>Go to the <a href="terms.html">Terms and Conditions</a> page to view more company policy.
       </div>
     </div>
